@@ -19,4 +19,4 @@ npm install
 npm run start
 '''
 
-[This is a preview of the project](https://ibb.co/x2txk9D)
+[This is a preview of the project](moviland.PNG)
