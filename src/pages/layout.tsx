@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Layout({ children }: PropsWithChildren) {
 
-    return <div className={`dark:bg-gray-800 px-5 ${inter.className}`}>
+    return <div className={`dark:bg-gray-800 px-5 h-screen ${inter.className}`}>
         <NavigationBar />
         <main className='max-w-6xl mx-auto'>{children}</main>
     </div>
