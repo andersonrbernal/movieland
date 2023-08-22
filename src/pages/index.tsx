@@ -1,9 +1,7 @@
 import Components from '$/@types/Components';
-import Movie from '$/components/Movie';
 import NoMoviesAlert from '$/components/NoMoviesAlert';
 import { useI18n } from '$/locales'
 import { renderMovies } from '$/utils/renderMovies';
-import axios from 'axios';
 import { TextInput } from 'flowbite-react';
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
@@ -26,19 +24,18 @@ export default function Home({ omdbUri }: HomeProps) {
   const [movieList, setMovieList] = useState<Components.Movie[]>([]);
   const [query, setQuery] = useState("")
 
-  console.log(movieList)
-
   useEffect(() => {
     if (query === "") return setMovieList([]);
 
     async function fetchMovies() {
-      const options = { params: { s: query.toLowerCase() } }
-      const { data } = await axios.get<OMDBResponse>(omdbUri, options);
-      if (data.Search) setMovieList(data.Search);
+      const uri = omdbUri + "&s=" + query.toLowerCase();
+      const response = await fetch(uri);
+      const data = await response.json() as unknown as OMDBResponse
+      if (data.Search) setMovieList(data.Search)
     }
 
     fetchMovies();
-  }, [query])
+  }, [query, omdbUri])
 
   return <div>
     <TextInput placeholder={t('metadata.description')} className='my-10 max-w-xs mx-auto'
@@ -54,6 +51,5 @@ export default function Home({ omdbUri }: HomeProps) {
 }
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
-  const omdbAPI = 'http://www.omdbapi.com/?'
-  return { props: { omdbUri: process.env.OMDB_API_KEY ?? omdbAPI } }
+  return { props: { omdbUri: process.env.NEXT_PUBLIC_OMDB_API_KEY ?? "" } }
 }
